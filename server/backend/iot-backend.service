@@ -1,0 +1,31 @@
+# systemd unit for the backend (WSL Ubuntu has systemd enabled).
+# Edit User= and the paths, then:
+#   sudo cp iot-backend.service /etc/systemd/system/
+#   sudo systemctl daemon-reload && sudo systemctl enable --now iot-backend
+
+[Unit]
+Description=ESP32 IoT backend (MQTT bridge + API)
+After=network-online.target mosquitto.service
+Wants=mosquitto.service
+
+[Service]
+Type=simple
+User=t2
+WorkingDirectory=/home/t2/ESP-IoT/server/backend
+ExecStart=/usr/bin/node dist/index.js
+Restart=always
+RestartSec=3
+Environment=NODE_ENV=production
+
+# Least privilege: the service only needs its own data directory.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=false
+ReadWritePaths=/home/t2/ESP-IoT/server/backend/data
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+
+[Install]
+WantedBy=multi-user.target

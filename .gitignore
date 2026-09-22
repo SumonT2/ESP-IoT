@@ -16,6 +16,14 @@ secrets.h
 *.crt
 *.p12
 
+# Node / backend
+node_modules/
+dist/
+data/
+*.db
+*.db-wal
+*.db-shm
+
 # OS
 Thumbs.db
 .DS_Store

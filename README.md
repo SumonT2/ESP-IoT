@@ -128,6 +128,9 @@ firmware/
   03-mqtt-node/     Phase 3: Wi-Fi + MQTT client (state, events, commands, LWT)
 server/
   mosquitto/        broker config (Phase 2)
+  backend/          Phase 4: Node/TS MQTT bridge, SQLite, REST + WebSocket
 docs/
-  phase-2-server.md WSL + Mosquitto setup guide
+  phase-2-server.md WSL + Mosquitto setup
+  phase-3-mqtt.md   boards on MQTT
+  phase-4-backend.md backend setup + API
 ```
