@@ -95,8 +95,8 @@ of who/what changed it.
 |---|---|---|
 | 0 | Toolchain + board check (identify chips, blink) | ✅ done |
 | 1 | Button + LED firmware, debounce, local state machine | ✅ done |
-| 2 | Server prep: static IP, SSH keys, ufw; Mosquitto on LAN 1883 | ▶ next |
-| 3 | Device MQTT client (state/cmd/LWT, reconnect) per board | |
+| 2 | Server prep: static IP, SSH keys, ufw; Mosquitto on LAN 1883 | ✅ done |
+| 3 | Device MQTT client (state/cmd/LWT, reconnect) per board | ▶ next |
 | 4 | Backend API + DB + WebSocket | |
 | 5 | Web dashboard (live state, manual/remote history) — LAN only | |
 | 6 | **Remote gate:** Cloudflare Access policy, then cloudflared tunnel | |
@@ -125,6 +125,7 @@ Stage A ground rules:
 firmware/
   00-board-check/   Phase 0: identify chip + blink
   01-button-led/    Phase 1: debounced button, LED, persisted state, serial console
+  03-mqtt-node/     Phase 3: Wi-Fi + MQTT client (state, events, commands, LWT)
 server/
   mosquitto/        broker config (Phase 2)
 docs/
