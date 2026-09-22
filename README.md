@@ -98,8 +98,8 @@ of who/what changed it.
 | 2 | Server prep: static IP, SSH keys, ufw; Mosquitto on LAN 1883 | ✅ done |
 | 3 | Device MQTT client (state/cmd/LWT, reconnect) per board | ✅ done |
 | 4 | Backend API + DB + WebSocket | ✅ done |
-| 5 | Web dashboard (live state, manual/remote history) — LAN only | ▶ next |
-| 6 | **Remote gate:** Cloudflare Access policy, then cloudflared tunnel | |
+| 5 | Web dashboard (live state, manual/remote history) — LAN only | ✅ done |
+| 6 | **Remote gate:** Cloudflare Access policy, then cloudflared tunnel | ▶ next |
 | 7 | Arduino I/O expanders over UART | |
 
 Stage A ground rules:

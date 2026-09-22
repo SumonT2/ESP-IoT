@@ -24,7 +24,13 @@ const char* logLevelName(LogLevel lvl) {
 
 static Button button;
 
-static void onStateChanged() { mqttPublishState(); }
+static void onStateChanged() {
+  const DeviceState& s = stateGet();
+  // History entry for the change itself, so the dashboard shows who did what
+  // (manual vs remote), not just button presses.
+  mqttPublishEvent("led", s.led ? "on" : "off", sourceName(s.src));
+  mqttPublishState();
+}
 
 static void printHelp() {
   Serial.println(F("Commands: s=state  t=toggle  1=on  0=off  n=network  i=info  v=log level  h=help"));
