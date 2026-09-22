@@ -23,7 +23,8 @@ of who/what changed it.
 
 ## Decisions
 
-- **Server:** on-premises Ubuntu server, same LAN as the devices.
+- **Server:** Ubuntu 26.04 in WSL2 (mirrored networking) on T2-PC, same LAN as
+  the devices (`192.168.68.106`). See [docs/phase-2-server.md](docs/phase-2-server.md).
 - **Remote access:** Cloudflare Tunnel (`cloudflared`, outbound only, no router
   port forwarding) protected by **Cloudflare Access** (login gate).
 - **Devices talk to the server over the LAN only.** MQTT is never tunnelled or
@@ -124,6 +125,8 @@ Stage A ground rules:
 firmware/
   00-board-check/   Phase 0: identify chip + blink
   01-button-led/    Phase 1: debounced button, LED, persisted state, serial console
-server/             (Phase 2+)
-docs/               per-phase guides
+server/
+  mosquitto/        broker config (Phase 2)
+docs/
+  phase-2-server.md WSL + Mosquitto setup guide
 ```
