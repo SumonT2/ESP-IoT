@@ -10,6 +10,7 @@
 #endif
 
 static uint32_t nextAttempt = 0;
+static uint32_t lastBegin = 0;
 static uint32_t backoffMs = WIFI_RETRY_MIN_MS;
 static bool wasConnected = false;
 
@@ -26,7 +27,8 @@ void netBegin() {
 #endif
   LOGI("Wi-Fi connecting to '%s'", WIFI_SSID);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
-  nextAttempt = millis() + backoffMs;
+  lastBegin = millis();
+  nextAttempt = lastBegin + backoffMs;
 }
 
 void netLoop() {
@@ -43,12 +45,17 @@ void netLoop() {
   }
   if (up) return;
 
+  // Never interrupt an attempt that is still running: the driver rejects a
+  // reconfigure while connecting (ESP_ERR_WIFI_STATE).
+  if (millis() - lastBegin < WIFI_CONNECT_TIMEOUT_MS) return;
+
   if (millis() >= nextAttempt) {  // retry with backoff, never blocking
     LOGD("Wi-Fi retry (backoff %lu ms)", (unsigned long)backoffMs);
     WiFi.disconnect();
     WiFi.begin(WIFI_SSID, WIFI_PASS);
+    lastBegin = millis();
     backoffMs = min<uint32_t>(backoffMs * 2, WIFI_RETRY_MAX_MS);
-    nextAttempt = millis() + backoffMs;
+    nextAttempt = lastBegin + backoffMs;
   }
 }
 

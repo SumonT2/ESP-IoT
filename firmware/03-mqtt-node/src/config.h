@@ -24,6 +24,7 @@ constexpr uint32_t LONG_PRESS_MS = 1500;  // hold time for a long press
 constexpr uint32_t SAVE_DELAY_MS = 2000;  // coalesce flash writes (wear)
 
 // Network — retries back off so a down server is not hammered
+constexpr uint32_t WIFI_CONNECT_TIMEOUT_MS = 15000;  // let an attempt finish
 constexpr uint32_t WIFI_RETRY_MIN_MS = 1000;
 constexpr uint32_t WIFI_RETRY_MAX_MS = 30000;
 constexpr uint32_t MQTT_RETRY_MIN_MS = 1000;
