@@ -1,0 +1,21 @@
+# PlatformIO build output
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# Editor (PlatformIO regenerates these per machine)
+.vscode/
+!.vscode/extensions.json
+
+# Secrets — never commit
+secrets.h
+*.env
+.env
+*.key
+*.pem
+*.crt
+*.p12
+
+# OS
+Thumbs.db
+.DS_Store
