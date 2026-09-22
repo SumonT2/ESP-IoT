@@ -119,6 +119,17 @@ Stage A ground rules:
 | 11 | Signed OTA updates | |
 | 12 | Secure Boot + Flash Encryption (optional, irreversible) | |
 
+### Stage C — Make it nice (after security)
+
+| # | Phase | Status |
+|---|---|---|
+| 13 | Device registry: devices report `capabilities`; UI renders widgets from them | |
+| 14 | Projects/groups: per-project page, theme, and saved widget layout | |
+| 15 | Polished dashboard: charts, history timeline, dark mode, mobile/PWA | |
+
+Design rule that makes Stage C cheap: the backend stays capability-driven and
+never hard-codes a board's hardware, so a new project needs a layout, not code.
+
 ## Layout
 
 ```
