@@ -2,6 +2,9 @@
 // Prints chip identity (confirms which board you actually have) and blinks the LED.
 
 #include <Arduino.h>
+#if defined(ESP32)
+#include <esp_mac.h>
+#endif
 
 #ifndef LED_ACTIVE_LOW
 #define LED_ACTIVE_LOW 0
@@ -29,8 +32,10 @@ static void printChipInfo() {
   Serial.printf("Free heap    : %lu B\n", (unsigned long)ESP.getFreeHeap());
   Serial.printf("PSRAM        : %lu B\n", (unsigned long)ESP.getPsramSize());
   Serial.printf("SDK          : %s\n", ESP.getSdkVersion());
-  uint64_t mac = ESP.getEfuseMac();
-  Serial.printf("Base MAC     : %012llX\n", mac);
+  uint8_t mac[6];
+  esp_read_mac(mac, ESP_MAC_WIFI_STA);
+  Serial.printf("Wi-Fi MAC    : %02X:%02X:%02X:%02X:%02X:%02X\n",
+                mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 #elif defined(ESP8266)
   Serial.println(F("Chip model   : ESP8266"));
   Serial.printf("Chip ID      : %06X\n", ESP.getChipId());
@@ -55,11 +60,18 @@ void setup() {
 }
 
 void loop() {
-  static uint32_t last = 0;
+  static uint32_t lastBlink = 0;
+  static uint32_t lastInfo = 0;
   static bool on = false;
-  if (millis() - last >= 500) {
-    last = millis();
+  if (millis() - lastBlink >= 500) {
+    lastBlink = millis();
     on = !on;
     setLed(on);
+  }
+  // Re-print periodically: native-USB boards (C3 Super Mini) drop the USB
+  // connection on reset, so the monitor misses the one-time boot print.
+  if (millis() - lastInfo >= 5000) {
+    lastInfo = millis();
+    printChipInfo();
   }
 }
