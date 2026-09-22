@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IoT Dashboard</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header class="bar">
+      <h1>IoT Dashboard</h1>
+      <div class="conn" id="conn"><span class="dot"></span><span id="conn-text">connecting…</span></div>
+    </header>
+
+    <main>
+      <section>
+        <h2>Devices</h2>
+        <div id="devices" class="grid">
+          <p class="empty" id="devices-empty">No devices yet. Power on a board.</p>
+        </div>
+      </section>
+
+      <section>
+        <div class="row">
+          <h2>Activity</h2>
+          <label class="filter">
+            device
+            <select id="filter"><option value="">all</option></select>
+          </label>
+        </div>
+        <ul id="events" class="events"></ul>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

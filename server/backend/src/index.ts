@@ -1,5 +1,8 @@
+import fastifyStatic from "@fastify/static";
 import websocket from "@fastify/websocket";
 import Fastify from "fastify";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 
 import { bus, type OutMessage } from "./bus.js";
 import { config } from "./config.js";
@@ -10,6 +13,23 @@ import { commandSchema } from "./types.js";
 
 const app = Fastify({ logger: false, bodyLimit: 16 * 1024 });
 await app.register(websocket);
+
+// Dashboard (Phase 5). Served from the same origin as the API, so no CORS and
+// no second port to protect.
+const here = dirname(fileURLToPath(import.meta.url));
+await app.register(fastifyStatic, { root: join(here, "..", "public") });
+
+app.addHook("onSend", async (_req, reply) => {
+  // Defence in depth for the dashboard: no framing, no sniffing, no referrers,
+  // and scripts/styles only from this origin.
+  reply.header("X-Content-Type-Options", "nosniff");
+  reply.header("X-Frame-Options", "DENY");
+  reply.header("Referrer-Policy", "no-referrer");
+  reply.header(
+    "Content-Security-Policy",
+    "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' ws: wss:; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+  );
+});
 
 const sockets = new Set<import("ws").WebSocket>();
 

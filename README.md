@@ -96,9 +96,9 @@ of who/what changed it.
 | 0 | Toolchain + board check (identify chips, blink) | ✅ done |
 | 1 | Button + LED firmware, debounce, local state machine | ✅ done |
 | 2 | Server prep: static IP, SSH keys, ufw; Mosquitto on LAN 1883 | ✅ done |
-| 3 | Device MQTT client (state/cmd/LWT, reconnect) per board | ▶ next |
-| 4 | Backend API + DB + WebSocket | |
-| 5 | Web dashboard (live state, manual/remote history) — LAN only | |
+| 3 | Device MQTT client (state/cmd/LWT, reconnect) per board | ✅ done |
+| 4 | Backend API + DB + WebSocket | ✅ done |
+| 5 | Web dashboard (live state, manual/remote history) — LAN only | ▶ next |
 | 6 | **Remote gate:** Cloudflare Access policy, then cloudflared tunnel | |
 | 7 | Arduino I/O expanders over UART | |
 
@@ -144,4 +144,5 @@ docs/
   phase-2-server.md WSL + Mosquitto setup
   phase-3-mqtt.md   boards on MQTT
   phase-4-backend.md backend setup + API
+  phase-5-dashboard.md dashboard
 ```
