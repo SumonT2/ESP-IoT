@@ -123,6 +123,7 @@ Stage A ground rules:
 ```
 firmware/
   00-board-check/   Phase 0: identify chip + blink
+  01-button-led/    Phase 1: debounced button, LED, persisted state, serial console
 server/             (Phase 2+)
 docs/               per-phase guides
 ```
