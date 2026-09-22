@@ -1,4 +1,4 @@
-﻿# ESP32 IoT â€” Secure Remote + Manual Control
+# ESP32 IoT — Secure Remote + Manual Control
 
 Control devices remotely from a web dashboard **and** manually (physical buttons),
 with the dashboard always showing the real, device-confirmed state and a history
@@ -36,22 +36,22 @@ of who/what changed it.
 
 ```
  Browser (anywhere)
-    â”‚ HTTPS
-    â–¼
- Cloudflare edge â”€â”€ Cloudflare Access (email OTP / Google login, allow-list)
-    â”‚ tunnel (outbound connection from server, no open ports)
-    â–¼
- â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ On-prem Ubuntu server (LAN) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
- â”‚ cloudflared  : tunnel â†’ only the dashboard port     â”‚
- â”‚ Backend API  : commands, audit log (app auth later) â”‚
- â”‚ WebSocket    : live state push to browsers          â”‚
- â”‚ Mosquitto    : MQTT broker, LAN only (1883 â†’ 8883)  â”‚
- â”‚ Database     : device state + event history         â”‚
- â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–²â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                        â”‚ MQTT over Wi-Fi/LAN
-          â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+    │ HTTPS
+    ▼
+ Cloudflare edge ── Cloudflare Access (email OTP / Google login, allow-list)
+    │ tunnel (outbound connection from server, no open ports)
+    ▼
+ ┌──────────── On-prem Ubuntu server (LAN) ────────────┐
+ │ cloudflared  : tunnel → only the dashboard port     │
+ │ Backend API  : commands, audit log (app auth later) │
+ │ WebSocket    : live state push to browsers          │
+ │ Mosquitto    : MQTT broker, LAN only (1883 → 8883)  │
+ │ Database     : device state + event history         │
+ └──────────────────────▲───────────────────────────────┘
+                        │ MQTT over Wi-Fi/LAN
+          ┌─────────────┼──────────────┐
       ESP32-C6     ESP32-C3 SM     ESP8266 NodeMCU
-          â”‚ UART
+          │ UART
       Arduino (extra I/O)
 ```
 
@@ -59,17 +59,17 @@ of who/what changed it.
 
 | Topic | Direction | Retained | Example |
 |---|---|---|---|
-| `dev/<id>/state` | device â†’ server | yes | `{"led":1,"btn":0,"src":"button","seq":42}` |
-| `dev/<id>/event` | device â†’ server | no | `{"type":"button","action":"press","ts":...}` |
-| `dev/<id>/cmd` | server â†’ device | no | `{"set":{"led":0},"nonce":"...","ts":...}` |
+| `dev/<id>/state` | device → server | yes | `{"led":1,"btn":0,"src":"button","seq":42}` |
+| `dev/<id>/event` | device → server | no | `{"type":"button","action":"press","ts":...}` |
+| `dev/<id>/cmd` | server → device | no | `{"set":{"led":0},"nonce":"...","ts":...}` |
 | `dev/<id>/status` | device (LWT) | yes | `online` / `offline` |
 
 ### Manual vs remote flow
 
-1. Button pressed â†’ device toggles LED immediately â†’ publishes `state` (`src:"button"`) + `event`.
+1. Button pressed → device toggles LED immediately → publishes `state` (`src:"button"`) + `event`.
 2. Server stores it, logs it, pushes to browsers via WebSocket.
-3. Dashboard click â†’ server validates user â†’ publishes `cmd` â†’ device applies â†’
-   publishes `state` (`src:"remote"`) â†’ UI updates only on that confirmation.
+3. Dashboard click → server validates user → publishes `cmd` → device applies →
+   publishes `state` (`src:"remote"`) → UI updates only on that confirmation.
 
 ## Security layers
 
@@ -78,37 +78,37 @@ of who/what changed it.
    of every tunnelled hostname. Created **before** the hostname is routed.
 3. **Server:** SSH keys only, `ufw` default-deny (MQTT allowed from LAN subnet only),
    `fail2ban`, unattended-upgrades.
-4. **MQTT:** username/password now â†’ TLS + per-device client certs (mTLS) + ACL later.
+4. **MQTT:** username/password now → TLS + per-device client certs (mTLS) + ACL later.
 5. **App:** own auth layer (Argon2 + TOTP/passkey) behind Access (defence in depth),
    verify Cloudflare Access JWT, command allow-list, nonce + timestamp anti-replay.
 6. **Firmware:** secrets in NVS (encrypted later), signed OTA.
 7. **Optional, irreversible:** Secure Boot v2 + Flash Encryption (ESP32-C6/C3 only).
 
-> âš ï¸ Step 7 permanently burns eFuses. Done last, on one test board, with explicit checklist.
+> ⚠️ Step 7 permanently burns eFuses. Done last, on one test board, with explicit checklist.
 
 ## Roadmap
 
-### Stage A â€” Build it
+### Stage A — Build it
 
 | # | Phase | Status |
 |---|---|---|
-| 0 | Toolchain + board check (identify chips, blink) | âœ… done |
-| 1 | Button + LED firmware, debounce, local state machine | â–¶ next |
+| 0 | Toolchain + board check (identify chips, blink) | ✅ done |
+| 1 | Button + LED firmware, debounce, local state machine | ✅ done |
 | 2 | Server prep: static IP, SSH keys, ufw; Mosquitto on LAN 1883 | ▶ next |
 | 3 | Device MQTT client (state/cmd/LWT, reconnect) per board | |
 | 4 | Backend API + DB + WebSocket | |
-| 5 | Web dashboard (live state, manual/remote history) â€” LAN only | |
+| 5 | Web dashboard (live state, manual/remote history) — LAN only | |
 | 6 | **Remote gate:** Cloudflare Access policy, then cloudflared tunnel | |
 | 7 | Arduino I/O expanders over UART | |
 
 Stage A ground rules:
 - No router port forwarding, ever.
-- Never use a "quick tunnel" (`trycloudflare.com`) â€” it has no Access gate.
+- Never use a "quick tunnel" (`trycloudflare.com`) — it has no Access gate.
 - Tunnel publishes only the dashboard; never MQTT, SSH, or database ports.
 - Wi-Fi/MQTT credentials only in git-ignored `secrets.h` / `.env`.
 - MQTT connection code isolated behind one module so TLS is a config switch later.
 
-### Stage B â€” Harden it
+### Stage B — Harden it
 
 | # | Phase | Status |
 |---|---|---|
