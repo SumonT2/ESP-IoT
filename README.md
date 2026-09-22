@@ -13,6 +13,14 @@ of who/what changed it.
 | NodeMCU | ESP8266 (ESP-12E) | Network node (limited TLS RAM) | `esp8266` |
 | Arduino Uno / Nano / Mini / Micro | AVR | I/O expander over UART (no network) | `uno`, `nano`, ... |
 
+### Verified board facts (Phase 0)
+
+| Board | Chip | Flash | Free heap | Onboard LED | USB serial |
+|---|---|---|---|---|---|
+| ESP32-C6 | C6 rev 0, 1 core @160 MHz | 8 MB | ~430 KB | GPIO8, WS2812 RGB | UART bridge |
+| ESP32-C3 Super Mini | C3 rev 4, 1 core @160 MHz | 4 MB | ~290 KB | GPIO8, active LOW | Native USB (CDC on boot) |
+| NodeMCU | ESP8266 @80 MHz | 4 MB | ~52 KB | GPIO2, active LOW | CH340 (driver needed) |
+
 ## Decisions
 
 - **Server:** on-premises Ubuntu server, same LAN as the devices.
@@ -84,8 +92,8 @@ of who/what changed it.
 
 | # | Phase | Status |
 |---|---|---|
-| 0 | Toolchain + board check (identify chips, blink) | ▶ in progress |
-| 1 | Button + LED firmware, debounce, local state machine | |
+| 0 | Toolchain + board check (identify chips, blink) | ✅ done |
+| 1 | Button + LED firmware, debounce, local state machine | ▶ next |
 | 2 | Server prep: static IP, SSH keys, ufw; Mosquitto on LAN 1883 | |
 | 3 | Device MQTT client (state/cmd/LWT, reconnect) per board | |
 | 4 | Backend API + DB + WebSocket | |
