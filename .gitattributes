@@ -1,0 +1,5 @@
+* text=auto
+# Files used inside Linux (WSL) must keep LF line endings
+*.conf text eol=lf
+*.sh   text eol=lf
+server/** text eol=lf
