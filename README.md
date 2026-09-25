@@ -145,4 +145,5 @@ docs/
   phase-3-mqtt.md   boards on MQTT
   phase-4-backend.md backend setup + API
   phase-5-dashboard.md dashboard
+  phase-6-remote-access.md Cloudflare Tunnel + Access
 ```
